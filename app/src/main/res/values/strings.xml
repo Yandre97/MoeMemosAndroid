@@ -62,12 +62,6 @@
     <string name="invalid_server">Invalid server.</string>
     <string name="access_token_invalid_relogin">Your access token is invalid, please create a never expire access token and login again.</string>
     <string name="sync_failed">Sync Failed</string>
-    <string name="memos_supported_versions">Moe Memos only supports Memos 0.21.0 and Memos 0.27.0 to 0.27.1.</string>
-    <string name="unsupported_memos_version_title">Unsupported Memos Version</string>
-    <string name="memos_login_version_higher_warning">Your Memos version is higher than the versions supported by Moe Memos. Compatibility issues may happen. Check the Moe Memos website before continuing.</string>
-    <string name="memos_sync_version_higher_warning">Your Memos version is higher than the versions supported by Moe Memos. Force sync may corrupt unsynced data. Check the Moe Memos website before continuing.</string>
-    <string name="still_login">Still login</string>
-    <string name="still_sync">Still Sync</string>
     <string name="pin">Pin</string>
     <string name="share">Share</string>
     <string name="copy">Copy</string>
@@ -101,6 +95,8 @@
     <string name="edit_gesture_single">Single tap</string>
     <string name="edit_gesture_double">Double tap</string>
     <string name="edit_gesture_long">Long tap</string>
+    <string name="dynamic_color">Dynamic Color</string>
+    <string name="dynamic_color_desc">Use system wallpaper colors</string>
     <string name="failed_to_open_attachment">Failed to open attachment</string>
     <string name="export_local_account">Export Local Data</string>
     <string name="local_export_success">Local data exported</string>
@@ -118,4 +114,7 @@
     <string name="pinned_only">Show only pinned items.</string>
     <string name="max_items">Maximum items to show</string>
     <string name="refresh">Refresh</string>
+    <string name="more_options">More options</string>
+    <string name="tag_icon">Tag</string>
+    <string name="expand_collapse">Expand or collapse</string>
 </resources>

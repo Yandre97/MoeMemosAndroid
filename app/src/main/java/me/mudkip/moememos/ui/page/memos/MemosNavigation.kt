@@ -10,7 +10,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import me.mudkip.moememos.data.model.Account
+import me.mudkip.moememos.ui.page.common.LocalRootNavController
 import me.mudkip.moememos.ui.page.common.RouteName
+import me.mudkip.moememos.ui.page.resource.ResourceListPage
+import me.mudkip.moememos.ui.page.settings.SettingsPage
 import me.mudkip.moememos.viewmodel.LocalUserState
 
 @Composable
@@ -21,6 +24,7 @@ fun MemosNavigation(
     val userStateViewModel = LocalUserState.current
     val currentAccount by userStateViewModel.currentAccount.collectAsState()
     val hasExplore = currentAccount !is Account.Local
+    val rootNavController = LocalRootNavController.current
 
     NavHost(
         navController = navController,
@@ -74,6 +78,20 @@ fun MemosNavigation(
 
         composable(RouteName.SEARCH) {
             SearchPage(navController = navController)
+        }
+
+        composable(RouteName.SETTINGS) {
+            SettingsPage(
+                drawerState = drawerState,
+                navController = rootNavController
+            )
+        }
+
+        composable(RouteName.RESOURCE) {
+            ResourceListPage(
+                drawerState = drawerState,
+                navController = rootNavController
+            )
         }
     }
 }

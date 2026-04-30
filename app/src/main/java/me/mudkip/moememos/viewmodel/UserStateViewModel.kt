@@ -70,35 +70,13 @@ class UserStateViewModel @Inject constructor(
         accountService.accounts.first().isNotEmpty()
     }
 
-    suspend fun checkLoginCompatibility(host: String): LoginCompatibility = withContext(viewModelScope.coroutineContext) {
-        try {
-            when (val compatibility = accountService.checkLoginCompatibility(host)) {
-                is AccountService.LoginCompatibility.Supported -> LoginCompatibility.Supported
-                is AccountService.LoginCompatibility.Unsupported -> LoginCompatibility.Unsupported(compatibility.message)
-                is AccountService.LoginCompatibility.RequiresConfirmation -> LoginCompatibility.RequiresConfirmation(compatibility.message)
-            }
-        } catch (e: Throwable) {
-            LoginCompatibility.Unsupported(e.localizedMessage ?: e.message ?: "")
-        }
-    }
-
     suspend fun loginMemosWithAccessToken(
         host: String,
         accessToken: String,
         accountLabel: String = "",
-        allowHigherV1Version: Boolean = false,
     ): ApiResponse<Unit> = withContext(viewModelScope.coroutineContext) {
         try {
-            val compatibility = accountService.checkLoginCompatibility(host, allowHigherV1Version)
-            val accountCase = when (compatibility) {
-                is AccountService.LoginCompatibility.Supported -> compatibility.accountCase
-                is AccountService.LoginCompatibility.Unsupported -> {
-                    return@withContext ApiResponse.exception(MoeMemosException(compatibility.message))
-                }
-                is AccountService.LoginCompatibility.RequiresConfirmation -> {
-                    return@withContext ApiResponse.exception(MoeMemosException(compatibility.message))
-                }
-            }
+            val accountCase = accountService.detectAccountCase(host)
             when (accountCase) {
                 UserData.AccountCase.MEMOS_V1 -> loginMemosV1WithAccessToken(host, accessToken, accountLabel)
                 UserData.AccountCase.MEMOS_V0 -> loginMemosV0WithAccessToken(host, accessToken, accountLabel)
@@ -197,12 +175,6 @@ class UserStateViewModel @Inject constructor(
             remoteIdentifier = user.name,
         )
     )
-}
-
-sealed class LoginCompatibility {
-    object Supported : LoginCompatibility()
-    data class Unsupported(val message: String) : LoginCompatibility()
-    data class RequiresConfirmation(val message: String) : LoginCompatibility()
 }
 
 val LocalUserState =

@@ -12,9 +12,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import me.mudkip.moememos.R
@@ -44,13 +48,15 @@ fun MemoContent(
     onTagClick: ((String) -> Unit)? = null
 ) {
     val rootNavController = LocalRootNavController.current
-    val (text, previewed) = remember(memo.content, previewMode) {
+    var expanded by remember { mutableStateOf(false) }
+    val (previewText, isTruncated) = remember(memo.content, previewMode) {
         if (previewMode) {
-            extractPreviewContent(markdownText = memo.content)
+            extractPreviewContent(markdownText = memo.content, maxLength = 200)
         } else {
             Pair(memo.content, false)
         }
     }
+    val displayText = if (previewMode && !expanded) previewText else memo.content
     val handleTagClick = remember(rootNavController, onTagClick) {
         onTagClick ?: { tag ->
             rootNavController.navigate("${RouteName.TAG}/${URLEncoder.encode(tag, "UTF-8")}") {
@@ -64,7 +70,7 @@ fun MemoContent(
         modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 10.dp)
     ) {
         Markdown(
-            text,
+            displayText,
             imageBaseUrl = LocalUserState.current.host,
             checkboxChange = checkboxChange,
             selectable = selectable,
@@ -73,13 +79,13 @@ fun MemoContent(
 
         MemoResourceContent(memo)
 
-        if (previewed && onViewMore != null) {
+        if (previewMode && isTruncated) {
             Row {
                 Text(
-                    text = R.string.view_more.string,
+                    text = if (expanded) stringResource(R.string.collapse) else stringResource(R.string.expand),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium.copy(textDecoration = TextDecoration.Underline),
-                    modifier = Modifier.clickable(onClick = onViewMore)
+                    modifier = Modifier.clickable { expanded = !expanded }
                 )
             }
         }

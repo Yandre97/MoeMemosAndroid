@@ -35,11 +35,11 @@ import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -54,6 +54,7 @@ import androidx.compose.ui.draganddrop.toAndroidDragEvent
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
@@ -69,6 +70,8 @@ import me.mudkip.moememos.ext.string
 import me.mudkip.moememos.ext.titleResource
 import me.mudkip.moememos.ui.component.Attachment
 import me.mudkip.moememos.ui.component.InputImage
+import me.mudkip.moememos.ui.component.MoeDropdownMenu
+import me.mudkip.moememos.ui.theme.MemoContentFontFamily
 import me.mudkip.moememos.viewmodel.MemoInputViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,7 +120,7 @@ private fun FormattingButtons(
                 MarkdownFormat.NUMBERED -> Icon(Icons.Outlined.FormatListNumbered, contentDescription = format.label)
                 MarkdownFormat.H1, MarkdownFormat.H2, MarkdownFormat.H3 -> Text(
                     text = format.label,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp
                 )
             }
@@ -156,7 +159,7 @@ internal fun MemoInputBottomBar(
             ) {
                 if (currentAccount !is Account.Local) {
                     Box {
-                        DropdownMenu(
+                        MoeDropdownMenu(
                             expanded = visibilityMenuExpanded,
                             onDismissRequest = { onVisibilityExpandedChange(false) },
                             properties = PopupProperties(focusable = false)
@@ -197,7 +200,7 @@ internal fun MemoInputBottomBar(
                     }
                 } else {
                     Box {
-                        DropdownMenu(
+                        MoeDropdownMenu(
                             expanded = tagMenuExpanded,
                             onDismissRequest = { onTagExpandedChange(false) },
                             properties = PopupProperties(focusable = false)
@@ -302,7 +305,8 @@ internal fun MemoInputEditor(
             value = text,
             label = { Text(R.string.any_thoughts.string) },
             onValueChange = onTextChange,
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            textStyle = memoInputTextStyle(MaterialTheme.typography.bodyLarge)
         )
 
         if (imageResources.isNotEmpty()) {
@@ -366,4 +370,8 @@ private fun ClipData.textList(): List<String> {
     return (0 until itemCount)
         .mapNotNull(::getItemAt)
         .mapNotNull { it.text?.toString() }
+}
+
+internal fun memoInputTextStyle(style: TextStyle): TextStyle {
+    return style.copy(fontFamily = MemoContentFontFamily)
 }

@@ -6,9 +6,11 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,7 +33,12 @@ fun TagMemoPage(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(tag) },
+                title = {
+                    Text(
+                        text = tag,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
                 navigationIcon = {
                     if (drawerState != null) {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
@@ -39,32 +46,28 @@ fun TagMemoPage(
                         }
                     }
                 },
-//                actions = {
-//                    IconButton(onClick = {
-//
-//                    }) {
-//                        Icon(Icons.Filled.Search, contentDescription = "Search")
-//                    }
-//                }
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
             )
         },
-
-        content = { innerPadding ->
-            MemosList(
-                contentPadding = innerPadding,
-                tag = tag,
-                onTagClick = { clickedTag ->
-                    if (normalizeTag(clickedTag) == normalizedCurrentTag) {
-                        return@MemosList
-                    }
-                    navController.navigate("${RouteName.TAG}/${java.net.URLEncoder.encode(clickedTag, "UTF-8")}") {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+        containerColor = MaterialTheme.colorScheme.surface
+    ) { innerPadding ->
+        MemosList(
+            contentPadding = innerPadding,
+            tag = tag,
+            onTagClick = { clickedTag ->
+                if (normalizeTag(clickedTag) == normalizedCurrentTag) {
+                    return@MemosList
                 }
-            )
-        }
-    )
+                navController.navigate("${RouteName.TAG}/${java.net.URLEncoder.encode(clickedTag, "UTF-8")}") {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
+    }
 }
 
 private fun normalizeTag(tag: String): String {

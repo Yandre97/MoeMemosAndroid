@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -16,7 +17,7 @@ import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.launch
@@ -48,11 +50,22 @@ fun ArchivedMemoCard(
     Card(
         modifier = Modifier
             .padding(horizontal = 15.dp, vertical = 10.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+            hoveredElevation = 0.dp
+        ),
+        shape = MaterialTheme.shapes.medium
     ) {
         Column {
             Row(
-                modifier = Modifier.padding(start = 15.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(start = 15.dp)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -64,7 +77,7 @@ fun ArchivedMemoCard(
                 ArchivedMemosCardActionButton(memo)
             }
 
-            MemoContent(memo, previewMode = false)
+            MemoContent(memo, previewMode = true)
         }
     }
 }
@@ -85,7 +98,7 @@ fun ArchivedMemosCardActionButton(
         IconButton(onClick = { menuExpanded = true }) {
             Icon(Icons.Filled.MoreVert, contentDescription = null)
         }
-        DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
+        MoeDropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
             DropdownMenuItem(
                 text = { Text(R.string.restore.string) },
                 onClick = {
@@ -124,9 +137,22 @@ fun ArchivedMemosCardActionButton(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text(R.string.delete_this_memo.string) },
+            icon = {
+                Icon(
+                    Icons.Outlined.Delete,
+                    contentDescription = stringResource(R.string.delete),
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(48.dp)
+                )
+            },
+            title = {
+                Text(
+                    R.string.delete_this_memo.string,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            },
             confirmButton = {
-                TextButton(
+                androidx.compose.material3.Button(
                     onClick = {
                         scope.launch {
                             archivedMemoListViewModel.deleteMemo(memo.identifier).suspendOnSuccess {
@@ -135,9 +161,10 @@ fun ArchivedMemosCardActionButton(
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colorScheme.error,
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    )
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text(R.string.confirm.string)
                 }
@@ -146,11 +173,13 @@ fun ArchivedMemosCardActionButton(
                 TextButton(
                     onClick = {
                         showDeleteDialog = false
-                    }
+                    },
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text(R.string.cancel.string)
                 }
-            }
+            },
+            shape = MaterialTheme.shapes.extraLarge
         )
     }
 }

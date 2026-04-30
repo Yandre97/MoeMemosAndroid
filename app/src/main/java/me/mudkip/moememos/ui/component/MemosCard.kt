@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.text.format.DateUtils
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Archive
@@ -21,13 +21,15 @@ import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.PinDrop
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Share
+
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -103,11 +105,15 @@ fun MemosCard(
 
     Card(
         modifier = cardModifier,
-        border = if (memo.pinned) {
-            BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-        } else {
-            null
-        }
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+            hoveredElevation = 0.dp
+        ),
+        shape = MaterialTheme.shapes.medium
     ) {
         Column {
             Row(
@@ -116,6 +122,16 @@ fun MemosCard(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                if (memo.pinned) {
+                    Icon(
+                        imageVector = Icons.Filled.PushPin,
+                        contentDescription = stringResource(R.string.pin),
+                        modifier = Modifier
+                            .padding(end = 5.dp)
+                            .size(18.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
                 Text(
                     DateUtils.getRelativeTimeSpanString(
                         memo.date.toEpochMilli(),
@@ -194,9 +210,9 @@ fun MemosCardActionButton(
 
     Box {
         IconButton(onClick = { menuExpanded = true }) {
-            Icon(Icons.Filled.MoreVert, contentDescription = null)
+            Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.more_options))
         }
-        DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
+        MoeDropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
             if (memo.pinned) {
                 DropdownMenuItem(
                     text = { Text(R.string.unpin.string) },
@@ -210,7 +226,7 @@ fun MemosCardActionButton(
                     leadingIcon = {
                         Icon(
                             Icons.Outlined.PinDrop,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.unpin)
                         )
                     })
             } else {
@@ -226,7 +242,7 @@ fun MemosCardActionButton(
                     leadingIcon = {
                         Icon(
                             Icons.Outlined.PushPin,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.pin)
                         )
                     })
             }
@@ -238,7 +254,7 @@ fun MemosCardActionButton(
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.Edit,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.edit)
                     )
                 })
             DropdownMenuItem(
@@ -255,7 +271,7 @@ fun MemosCardActionButton(
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.Share,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.share)
                     )
                 })
             DropdownMenuItem(
@@ -269,7 +285,7 @@ fun MemosCardActionButton(
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.ContentCopy,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.copy)
                     )
                 })
             if (currentAccount !is Account.Local) {
@@ -290,7 +306,7 @@ fun MemosCardActionButton(
                     leadingIcon = {
                         Icon(
                             Icons.Outlined.Link,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.copy_link)
                         )
                     })
             }
@@ -310,7 +326,7 @@ fun MemosCardActionButton(
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.Archive,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.archive)
                     )
                 })
             DropdownMenuItem(
@@ -326,7 +342,7 @@ fun MemosCardActionButton(
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.Delete,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.delete)
                     )
                 })
         }
@@ -335,9 +351,22 @@ fun MemosCardActionButton(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text(R.string.delete_this_memo.string) },
+            icon = {
+                Icon(
+                    Icons.Outlined.Delete,
+                    contentDescription = stringResource(R.string.delete),
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = androidx.compose.ui.Modifier.size(48.dp)
+                )
+            },
+            title = {
+                Text(
+                    R.string.delete_this_memo.string,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            },
             confirmButton = {
-                TextButton(
+                androidx.compose.material3.Button(
                     onClick = {
                         scope.launch {
                             memosViewModel.deleteMemo(memo.identifier).suspendOnSuccess {
@@ -346,9 +375,10 @@ fun MemosCardActionButton(
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colorScheme.error,
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    )
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text(R.string.confirm.string)
                 }
@@ -357,11 +387,13 @@ fun MemosCardActionButton(
                 TextButton(
                     onClick = {
                         showDeleteDialog = false
-                    }
+                    },
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text(R.string.cancel.string)
                 }
-            }
+            },
+            shape = MaterialTheme.shapes.extraLarge
         )
     }
 }

@@ -38,6 +38,7 @@ import com.mikepenz.markdown.model.markdownAnnotator
 import com.mikepenz.markdown.model.markdownAnnotatorConfig
 import com.mikepenz.markdown.model.rememberMarkdownState
 import com.mikepenz.markdown.utils.getUnescapedTextInNode
+import me.mudkip.moememos.ui.theme.MemoContentFontFamily
 import me.mudkip.moememos.util.findCustomTagMatches
 import me.mudkip.moememos.util.getCustomTagName
 import me.mudkip.moememos.util.isCustomTagSupportedNode
@@ -54,17 +55,17 @@ fun Markdown(
     selectable: Boolean = false,
     onTagClick: ((tag: String) -> Unit)? = null,
 ) {
-    fun withOptionalTextAlign(style: TextStyle): TextStyle {
-        return if (textAlign == null) style else style.copy(textAlign = textAlign)
+    fun withMemoContentStyle(style: TextStyle): TextStyle {
+        return memoContentTextStyle(style, textAlign)
     }
 
-    val bodyTextStyle = withOptionalTextAlign(MaterialTheme.typography.bodyLarge)
-    val h1TextStyle = withOptionalTextAlign(MaterialTheme.typography.headlineLarge)
-    val h2TextStyle = withOptionalTextAlign(MaterialTheme.typography.headlineMedium)
-    val h3TextStyle = withOptionalTextAlign(MaterialTheme.typography.headlineSmall)
-    val h4TextStyle = withOptionalTextAlign(MaterialTheme.typography.titleLarge)
-    val h5TextStyle = withOptionalTextAlign(MaterialTheme.typography.titleMedium)
-    val h6TextStyle = withOptionalTextAlign(MaterialTheme.typography.titleSmall)
+    val bodyTextStyle = withMemoContentStyle(MaterialTheme.typography.bodyLarge)
+    val h1TextStyle = withMemoContentStyle(MaterialTheme.typography.headlineLarge)
+    val h2TextStyle = withMemoContentStyle(MaterialTheme.typography.headlineMedium)
+    val h3TextStyle = withMemoContentStyle(MaterialTheme.typography.headlineSmall)
+    val h4TextStyle = withMemoContentStyle(MaterialTheme.typography.titleLarge)
+    val h5TextStyle = withMemoContentStyle(MaterialTheme.typography.titleMedium)
+    val h6TextStyle = withMemoContentStyle(MaterialTheme.typography.titleSmall)
     val uriHandler = LocalUriHandler.current
     val tagLinkStyle = TextLinkStyles(
         style = SpanStyle(
@@ -196,6 +197,18 @@ fun Markdown(
     } else {
         markdownContent()
     }
+}
+
+internal fun memoContentTextStyle(
+    style: TextStyle,
+    textAlign: TextAlign?
+): TextStyle {
+    val alignedStyle = if (textAlign == null) {
+        style
+    } else {
+        style.copy(textAlign = textAlign)
+    }
+    return alignedStyle.copy(fontFamily = MemoContentFontFamily)
 }
 
 private fun resolveMarkdownImageLink(link: String, imageBaseUrl: String?): String {

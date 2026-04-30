@@ -12,7 +12,6 @@ import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -120,7 +119,7 @@ fun Attachment(
     )
 
     if (onRemove != null) {
-        DropdownMenu(
+        MoeDropdownMenu(
             expanded = menuExpanded,
             onDismissRequest = { menuExpanded = false },
             properties = PopupProperties(focusable = false)

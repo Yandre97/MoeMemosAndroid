@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -70,7 +69,7 @@ fun InputImage(
                 },
             contentScale = ContentScale.Crop
         )
-        DropdownMenu(expanded = menuExpanded,
+        MoeDropdownMenu(expanded = menuExpanded,
             onDismissRequest = { menuExpanded = false },
             properties = PopupProperties(focusable = false)
         ) {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -35,8 +36,6 @@ import me.mudkip.moememos.ui.page.memos.MemoDetailPage
 import me.mudkip.moememos.ui.page.memos.MemosPage
 import me.mudkip.moememos.ui.page.memos.SearchPage
 import me.mudkip.moememos.ui.page.memos.TagMemoPage
-import me.mudkip.moememos.ui.page.resource.ResourceListPage
-import me.mudkip.moememos.ui.page.settings.SettingsPage
 import me.mudkip.moememos.ui.theme.MoeMemosTheme
 import me.mudkip.moememos.viewmodel.LocalUserState
 
@@ -54,55 +53,276 @@ fun Navigation() {
                 navController = navController,
                 startDestination = RouteName.MEMOS,
                 enterTransition = {
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up,
-                        initialOffset = { it / 4 }) + fadeIn()
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(220),
+                        initialOffset = { it / 3 }
+                    ) + fadeIn(animationSpec = tween(220))
                 },
                 exitTransition = {
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down,
-                        targetOffset = { it / 4 }) + fadeOut()
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(220),
+                        targetOffset = { it / 3 }
+                    ) + fadeOut(animationSpec = tween(220))
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(220),
+                        initialOffset = { it / 3 }
+                    ) + fadeIn(animationSpec = tween(220))
+                },
+                popExitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(220),
+                        targetOffset = { it / 3 }
+                    ) + fadeOut(animationSpec = tween(220))
                 },
             ) {
                 composable(RouteName.MEMOS) {
                     MemosPage()
                 }
 
-                composable(RouteName.SETTINGS) {
-                    SettingsPage(navController = navController)
-                }
-
-                composable(RouteName.ADD_ACCOUNT) {
+                composable(
+                    RouteName.ADD_ACCOUNT,
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    }
+                ) {
                     AddAccountPage(navController = navController)
                 }
 
-                composable(RouteName.LOGIN) {
+                composable(
+                    RouteName.LOGIN,
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    }
+                ) {
                     LoginPage(navController = navController)
                 }
 
-                composable(RouteName.INPUT) {
+                composable(
+                    RouteName.INPUT,
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    }
+                ) {
                     MemoInputPage()
                 }
 
-                composable(RouteName.SHARE) {
+                composable(
+                    RouteName.SHARE,
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    }
+                ) {
                     MemoInputPage(shareContent = shareContent)
                 }
 
-                composable("${RouteName.EDIT}?memoId={id}"
+                composable(
+                    "${RouteName.EDIT}?memoId={id}",
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    }
                 ) { entry ->
                     MemoInputPage(memoIdentifier = entry.arguments?.getString("id"))
                 }
 
-                composable(RouteName.RESOURCE) {
-                    ResourceListPage(navController = navController)
-                }
-
-                composable("${RouteName.ACCOUNT}?accountKey={accountKey}") { entry ->
+                composable(
+                    "${RouteName.ACCOUNT}?accountKey={accountKey}",
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    }
+                ) { entry ->
                     AccountPage(
                         navController = navController,
                         selectedAccountKey = entry.arguments?.getString("accountKey") ?: ""
                     )
                 }
 
-                composable(RouteName.SEARCH) {
+                composable(
+                    RouteName.SEARCH,
+                    enterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    exitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    },
+                    popEnterTransition = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(250),
+                            initialOffset = { it / 3 }
+                        ) + fadeIn(animationSpec = tween(250))
+                    },
+                    popExitTransition = {
+                        slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(250),
+                            targetOffset = { it / 3 }
+                        ) + fadeOut(animationSpec = tween(250))
+                    }
+                ) {
                     SearchPage(navController = navController)
                 }
 
